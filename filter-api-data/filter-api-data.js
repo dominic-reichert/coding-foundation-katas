@@ -1,8 +1,9 @@
 function filterApiData(apiData, mandatoryKeys) {
-  for (let key of mandatoryKeys) {
-    apiData = apiData.filter((e) => {
-      return e.hasOwnProperty(key);
-    });
-  }
-  return apiData;
+  let result = [];
+  apiData.forEach((entry) => {
+    if (mandatoryKeys.every((key) => Object.keys(entry).includes(key))) {
+      result.push(entry);
+    }
+  });
+  return result;
 }
