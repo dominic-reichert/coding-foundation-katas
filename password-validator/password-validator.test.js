@@ -1,12 +1,12 @@
 describe("Password Validator", function () {
-  it("should test password ...", function () {
-    const result = validatePassword("!a1b2c3c4#");
+  it("should result in valid password", function () {
+    const result = validatePassword("!a1b2c3d4#");
     chai.expect(result.valid).to.equal(true);
     chai.expect(result.reasons.length).to.equal(0);
   });
 
-  it("should test password ...", function () {
-    const result = validatePassword("!!a1b2c3c4");
+  it("should result in invalid password because of duplicate special character", function () {
+    const result = validatePassword("!!a1b2c3d4");
     chai.expect(result.valid).to.equal(false);
     chai.expect(result.reasons.length).to.equal(1);
     chai
@@ -14,9 +14,34 @@ describe("Password Validator", function () {
       .to.equal(true);
   });
 
-  // TODO: add your own tests here for all possible error messages (not combinations)
+  it("should result in invalid password because of consecutive character", function () {
+    const result = validatePassword("?ab1#c3d4!");
+    chai.expect(result.valid).to.equal(false);
+    chai.expect(result.reasons.length).to.equal(1);
+    chai
+      .expect(result.reasons.includes("consecutive character"))
+      .to.equal(true);
+  });
 
-  // it("should test password ...", function () {
-  // ...
-  // });
+  it("should result in invalid password because of consecutive number", function () {
+    const result = validatePassword("?a12c3d4!9");
+    chai.expect(result.valid).to.equal(false);
+    chai.expect(result.reasons.length).to.equal(1);
+    chai.expect(result.reasons.includes("consecutive number")).to.equal(true);
+  });
+
+  it("should result in invalid password because of duplicate number", function () {
+    const result = validatePassword("?a2b2c3d4!");
+    console.log(result);
+    chai.expect(result.valid).to.equal(false);
+    chai.expect(result.reasons.length).to.equal(1);
+    chai.expect(result.reasons.includes("duplicate number")).to.equal(true);
+  });
+
+  it("should result in invalid password because of min length", function () {
+    const result = validatePassword("!a1b2c3d");
+    chai.expect(result.valid).to.equal(false);
+    chai.expect(result.reasons.length).to.equal(1);
+    chai.expect(result.reasons.includes("min length")).to.equal(true);
+  });
 });
